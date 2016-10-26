@@ -227,8 +227,9 @@ if __name__ == "__main__":
     import argparse
     
     ##Switching to using an ArgumentParser
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(epilog="""This script is designed to be used with youtube-dl try the example below\nyoutube-dl --write-annotations --exec '/path/to/youtube-ass.py -c -f {}' [OPTIONS] URL [URL...]""")
     parser.add_argument("-c", "--youtube-dl-compatablity-mode", action="store_true", help="Use with youtube-dl --exec, strips the file extension and replaces it with .annotations.xml, only functions in single file mode")
+    parser.add_argument("-v", "--verbose", action="store_true")
     parser.add_argument("-d", "--delete-annotations", action="store_true", help="Delete annotations after processing them")
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument("-a","--all", action="store_true", help="Process all *.annotations.xml files in the CWD")
@@ -246,9 +247,15 @@ if __name__ == "__main__":
     else:
         fn = args.filename
         if args.youtube_dl_compatablity_mode:
-        ##TODO: Confirm this file exists
             fn = os.path.splitext(fn)[0] + ".annotations.xml"
-        xml_files = [fn,]
+        
+        #Check if the file actually exists; if it doesn't we'll have an emopty list and just fall through the loop below us
+        if os.path.isfile(fn):
+            xml_files = [fn,]
+        else:
+            if args.verbose:
+                print("file does not exist")
+            xml_files = []
         
     for full_filename in xml_files:
         with open(full_filename) as f:

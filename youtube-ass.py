@@ -204,22 +204,33 @@ class YoutubeAss(object):
             f.write(self.Events)
             f.write("\n")
 
+    def save(self, filename):
+        if "Dialogue" not in self.Events:
+            print("There was no 'Dialogue' in the annotations.\nNo subtitle file will be created")
+        else:
+            print("CREATING .ASS FILE")
+            with open(filename, 'w') as f:
+                f.write(self.Script_Info)
+                f.write("\n")
+                f.write(self.V4_Styles)
+                f.write("\n")
+                f.write(self.Events)
+                f.write("\n")
+
 if __name__ == "__main__":
     import sys
-    try:
-        from urllib2 import urlopen
-    except ImportError:
-        from urllib.request import urlopen
-    if len(sys.argv) < 2 or sys.argv[1] in ("--help", "-h"):
-        print("Usage: {0} <youtube video id>".format(sys.argv[0]))
-        exit(0)
-    video_id = sys.argv[1]
-    url = "http://youtube.com/annotations/read2?feat=TCS&video_id=" + video_id
-    xml_data = urlopen(url).read()
-    if DEBUG:
-        with open(video_id+'-annotations.xml', 'w') as f:
-            f.write(str(xml_data))
-    ass = YoutubeAss(xml_data)
-    ass.save("{0}.ass".format(video_id))
-
-# vim: set ts=4 sw=4 sts=4 noet ai si filetype=python:
+    import os
+##    if len(sys.argv) < 2 or sys.argv[1] in ("--help", "-h"):
+##        print("Usage: {0} <youtube video id>".format(sys.argv[0]))
+##        exit(0)
+##    filename = sys.argv[1]
+##    xml_data = open(filename).read()
+##    ass = YoutubeAss(xml_data)
+##    ass.save("{0}.ass".format(filename))
+    xml_files = [filename for filename in  os.listdir('.') if filename.endswith('annotations.xml')]
+    for full_filename in xml_files:
+        with open(full_filename) as f:
+            xml_data = f.read()
+        ass = YoutubeAss(xml_data)
+        ##slicing off .xml from the filename
+        ass.save("{0}.ass".format(full_filename[:-4])) 

@@ -31,3 +31,25 @@ derivative licensing problems.
 
 Created for use by youtube-dl:
 * https://github.com/rg3/youtube-dl/issues/90
+
+
+$ ./youtube-ass.py -h
+usage: youtube-ass.py [-h] [-c] [-d] (-a | -f FILENAME)
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -c, --youtube-dl-compatablity-mode
+                        Use with youtube-dl --exec, strips the file extension
+                        and replaces it with .annotations.xml, only functions
+                        in single file mode
+  -d, --delete-annotations
+                        Delete annotations after processing them
+  -a, --all             Process all *.annotations.xml files in the CWD
+  -f FILENAME, --filename FILENAME
+                        Single file name to process
+
+to use with youtube-dl:
+    Keep the annotation files
+        youtube-dl --write-annotations --exec '/path/to/youtube-ass.py -c -f {}' [OPTIONS] URL [URL...]
+    delete the annotation files when finished
+        youtube-dl --write-annotations --exec '/path/to/youtube-ass.py -c -d -f {}' [OPTIONS] URL [URL...]

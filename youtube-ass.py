@@ -246,6 +246,7 @@ if __name__ == "__main__":
     else:
         fn = args.filename
         if args.youtube_dl_compatablity_mode:
+        ##TODO: Confirm this file exists
             fn = os.path.splitext(fn)[0] + ".annotations.xml"
         xml_files = [fn,]
         

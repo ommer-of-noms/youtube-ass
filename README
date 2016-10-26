@@ -16,9 +16,12 @@ instead of x/y and there's very little control over vertical spacing.
 
 TODO:
 * Support languages other than English
+    * Done? Switched to Python3 and got this for free. Removed references to 'encode'
 * Try to use ASS Picture Event lines to create transparent text boxes
 * Use ffmpeg to mux the audio/video/subtitle streams into mkv
 * What about automatic captions?
+    * youtube-dl handles these now, so don't need to add this functionality
+* Make a way to remove annotations like "Click Here", "Subscribe", etc.
 * More that I'm forgetting.
 
 Released under the CC-0 License

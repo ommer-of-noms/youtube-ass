@@ -194,8 +194,6 @@ class YoutubeAss(object):
         }
         for (name, data) in self.events.items():
             data.update(misc_data)
-            ##TODO: There's some form of error that happens when the text has newline characters,
-            ##      figureout how to endcode them or just strip them.
             line = "Dialogue: {Marked},{Start},{End},{Style}," \
             "{Name},{MarginL},{MarginR},{MarginV},{Effect},{Text}" \
             "\n".format(Style=name, **data)

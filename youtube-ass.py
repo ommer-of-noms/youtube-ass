@@ -2,8 +2,9 @@
 # -*- coding: utf-8 -*-
 
 __authors__  = (
-	'Nirbheek Chauhan',
-	)
+    'Nirbheek Chauhan',
+    'ommer-of-noms',
+    )
 
 __license__ = 'Public Domain'
 __version__ = '2012.01.12'
@@ -222,19 +223,39 @@ class YoutubeAss(object):
                 f.write("\n")
 
 if __name__ == "__main__":
-    import sys
     import os
-##    if len(sys.argv) < 2 or sys.argv[1] in ("--help", "-h"):
-##        print("Usage: {0} <youtube video id>".format(sys.argv[0]))
-##        exit(0)
-##    filename = sys.argv[1]
-##    xml_data = open(filename).read()
-##    ass = YoutubeAss(xml_data)
-##    ass.save("{0}.ass".format(filename))
-    xml_files = [filename for filename in  os.listdir('.') if filename.endswith('annotations.xml')]
+    import argparse
+    
+    ##Switching to using an ArgumentParser
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-c", "--youtube-dl-compatablity-mode", action="store_true", help="Use with youtube-dl --exec, strips the file extension and replaces it with .annotations.xml, only functions in single file mode")
+    parser.add_argument("-d", "--delete-annotations", action="store_true", help="Delete annotations after processing them")
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument("-a","--all", action="store_true", help="Process all *.annotations.xml files in the CWD")
+    group.add_argument("-f", "--filename", type=str, help="Single file name to process")
+
+
+    args = parser.parse_args()
+    
+    if DEBUG:
+        print(args)
+    
+    if args.all:
+        xml_files = [filename for filename in  os.listdir('.') if filename.endswith('annotations.xml')]
+        
+    else:
+        fn = args.filename
+        if args.youtube_dl_compatablity_mode:
+            fn = os.path.splitext(fn)[0] + ".annotations.xml"
+        xml_files = [fn,]
+        
     for full_filename in xml_files:
         with open(full_filename) as f:
             xml_data = f.read()
         ass = YoutubeAss(xml_data)
         ##slicing off .xml from the filename
-        ass.save("{0}.ass".format(full_filename[:-4])) 
+        ass.save("{0}.ass".format(full_filename[:-4]))
+        if args.delete_annotations:
+            os.remove(full_filename)
+            
+

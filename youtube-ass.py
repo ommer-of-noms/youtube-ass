@@ -111,7 +111,11 @@ class YoutubeAss(object):
             if not hasattr(each.find('TEXT'), "text"):
                 print("Skipping empty annotation with id: "+ant_id)
                 continue
-            text = each.find('TEXT').text.encode('utf-8')
+                
+            ##replace newlines with escaped new line characters; this way we're
+            ##actually leaving the new line character in instead of printing the text on multiple lines
+            text = each.find('TEXT').text.replace("\n", "\\n")
+            
             moving_region = each.find('segment').find('movingRegion')
             box = moving_region.findall('rectRegion')
             if not box:
